@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#4c5257"> <!--클릭시 색상-->
+
+    <!--배경색-->
+    <item android:id = "@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="#000000"/>
+            <corners
+                android:bottomLeftRadius="23dp"
+                android:bottomRightRadius="23dp"
+                android:topLeftRadius="23dp"
+                android:topRightRadius="23dp"/>
+        </shape>
+    </item>
+</ripple>

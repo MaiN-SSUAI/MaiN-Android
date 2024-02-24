@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CalendarTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- 상단 Title 배경색 -->
+        <item name="colorAccent">@color/calendarTitleColor</item>
+
+        <!-- 선택한 날짜 배경 색 -->
+        <item name="colorControlActivated">@color/datePickBlue</item>
+
+        <!-- Highlight item color-->
+        <item name="colorControlHighlight">@color/datePickBlue</item>
+
+        <!--Calender Background color -->
+        <item name="android:colorBackground">@color/white</item>
+
+        <!-- Week TextColor-->
+        <item name="android:textColorSecondary">@color/black</item>
+
+        <!--day , month TextColor-->
+        <item name="android:textColorPrimaryInverse">@color/white</item>
+
+        <!-- year-->
+        <item name="android:textColorSecondaryInverse">@color/white</item>
+
+        <!-- 취소/확인버튼 색상 -->
+        <item name="android:textColor">@color/reservButtonBlue</item>
+
+<!--        <item name="android:textSize">20sp</item>-->
+
+<!--        <item name="cornerSize">16dp</item>-->
+
+
+    </style>
+
+</resources>

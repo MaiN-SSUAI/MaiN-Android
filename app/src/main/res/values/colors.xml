@@ -2,4 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="gray00">#F2F4F6</color>
+    <color name="gray01">#797979</color>
+    <color name="gray02">#4D4D4D</color>
+    <color name="titleBlue">#016088</color>
+    <color name="blue02">#016088</color>
+    <color name="red00">#FF001F</color>
+    <color name="reservationBlueBlock">#96DCFF</color>
+    <color name="reservationRedBlock">#FFA5A5</color>
+    <color name="reservationYellowBlock">#FFEBA5</color>
+    <color name="datePickBlue">#AEE4FF</color>
+    <color name="reservButtonBlue">#298BFF</color>
+    <color name="calendarTitleColor">#6ED3FF</color>
+    <color name="pressedColor">#4AB3E0</color>
 </resources>

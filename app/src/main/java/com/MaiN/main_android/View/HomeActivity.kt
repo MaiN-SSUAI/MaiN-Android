@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.MaiN.main_android.R
-import com.MaiN.main_android.View.Reserv.ReservFragment
+import com.MaiN.main_android.View.Reserv.ReservationFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeActivity:AppCompatActivity() {
@@ -28,7 +28,7 @@ class HomeActivity:AppCompatActivity() {
                     selectedFragment = MypageFragment()
                 }
                 R.id.tab_menu_reserv -> {
-                    selectedFragment = ReservFragment()
+                    selectedFragment = ReservationFragment()
                 }
             }
             if (selectedFragment != null) {

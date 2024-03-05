@@ -2,21 +2,23 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="Cell1">
+        <State />
+      </entry>
+      <entry key="PreviewCellColumn">
+        <State />
+      </entry>
+      <entry key="PreviewDetailBottomSheet">
+        <State />
+      </entry>
+      <entry key="PreviewTimeline">
+        <State />
+      </entry>
+      <entry key="ReservationScreenPreview">
+        <State />
+      </entry>
       <entry key="app">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="$USER_HOME$/.android/avd/Pixel_5_API_34.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-02-21T16:32:43.882489Z" />
-        </State>
+        <State />
       </entry>
     </value>
   </component>

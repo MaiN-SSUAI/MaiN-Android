@@ -222,6 +222,7 @@ class ReservationViewModel : ViewModel() {
                 object : Callback<Void> {
                     override fun onResponse(call: Call<Void>, response: Response<Void>) {
                         Log.d("KWK-addEvent-SUCCESS", response.body().toString())
+                        refresh()
                     }
 
                     override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -239,6 +240,7 @@ class ReservationViewModel : ViewModel() {
                 object : Callback<Unit> {
                     override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                         Log.d("KWK-deleteEvent-SUCCESS", response.body().toString())
+                        refresh()
                     }
 
                     override fun onFailure(call: Call<Unit>, t: Throwable) {

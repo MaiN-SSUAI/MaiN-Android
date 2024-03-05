@@ -75,7 +75,6 @@ fun ReservationScreen(
         bottomSheetData = state.bottomSheetData,
         onDeleteClick = {
             viewModel.deleteEvent(it)
-            viewModel.refresh()
         }
     )
 
@@ -86,7 +85,6 @@ fun ReservationScreen(
         },
         onReservation = {
             viewModel.addEvent(it.toReservationRequest("${state.year}-${state.month.fillTwoZero()}-${state.day.fillTwoZero()}"))
-            viewModel.refresh()
         }
     )
 

@@ -8,8 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.MaiN.main_android.R
 import com.MaiN.main_android.SharedPreference.MyApplication
@@ -17,15 +15,11 @@ import com.MaiN.main_android.View.Notice.AiNoti_WebView
 import com.MaiN.main_android.retrofit.AiNotiAPIService
 import com.MaiN.main_android.retrofit.AiNotiDataclass
 import com.MaiN.main_android.retrofit.RetrofitConnection
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class AiNotiAdapter(
-    private val lifecycleCoroutineScope: LifecycleCoroutineScope
+    private val lifecycleScope: LifecycleCoroutineScope
 ): RecyclerView.Adapter<AiNotiAdapter.AiNotiViewHolder>() {
     private val allItems = ArrayList<AiNotiDataclass.AiNotiDataclassItem>()
     private var items = ArrayList<AiNotiDataclass.AiNotiDataclassItem>()
@@ -98,13 +92,13 @@ class AiNotiAdapter(
                 if(item.favorites) {
                     favorite.setImageResource(R.drawable.selected_star)
                     val studentId=MyApplication.prefs.getSchoolNumber("schoolNumber","")
-                    lifecycleCoroutineScope.launch(Dispatchers.IO) {
+                    lifecycleScope.launch(Dispatchers.IO) {
                         addFavorite(studentId,item.id)
                     }
                 }else{
                     favorite.setImageResource(R.drawable.unselected_star)
                     val studentId=MyApplication.prefs.getSchoolNumber("schoolNumber","")
-                    lifecycleCoroutineScope.launch(Dispatchers.IO) {
+                    lifecycleScope.launch(Dispatchers.IO) {
                         deleteFavorite(studentId,item.id)
                     }
                 }

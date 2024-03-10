@@ -45,7 +45,7 @@ class AinotiFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.ainoti_recyclerView)
-        adapter = AiNotiAdapter(viewLifecycleOwner.lifecycleScope)
+        adapter = AiNotiAdapter(lifecycleScope)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 

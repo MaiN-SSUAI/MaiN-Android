@@ -9,6 +9,7 @@ import android.webkit.CookieManager
 import android.webkit.WebView
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import com.MaiN.main_android.R
 import com.MaiN.main_android.SharedPreference.MyApplication
@@ -16,18 +17,19 @@ import com.MaiN.main_android.View.Notice.Funsys_WebView
 import com.MaiN.main_android.retrofit.FunsysAPIService
 import com.MaiN.main_android.retrofit.FunsysDataclass
 import com.MaiN.main_android.retrofit.RetrofitConnection
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class FunsysAdapter: RecyclerView.Adapter<FunsysAdapter.FunsysViewHolder>() {
+class FunsysAdapter(
+    private val lifecycleScope: LifecycleCoroutineScope
+) : RecyclerView.Adapter<FunsysAdapter.FunsysViewHolder>() {
     private val allItems = ArrayList<FunsysDataclass.FunsysDataclassItem>()
     private var items = ArrayList<FunsysDataclass.FunsysDataclassItem>()
 
     fun setItems(items: List<FunsysDataclass.FunsysDataclassItem>) {
         this.allItems.clear()
         this.allItems.addAll(items)
-        this.items= ArrayList(allItems)
+        this.items = ArrayList(allItems)
         notifyDataSetChanged()
     }
 
@@ -48,7 +50,7 @@ class FunsysAdapter: RecyclerView.Adapter<FunsysAdapter.FunsysViewHolder>() {
         viewType: Int
     ): FunsysAdapter.FunsysViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.funsys_recycler,parent,false)
+            .inflate(R.layout.funsys_recycler, parent, false)
         return FunsysViewHolder(view)
     }
 
@@ -58,13 +60,13 @@ class FunsysAdapter: RecyclerView.Adapter<FunsysAdapter.FunsysViewHolder>() {
 
     override fun getItemCount(): Int = items.size
 
-    inner class FunsysViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
-        private val start_date : TextView = itemView.findViewById(R.id.funsys_item_startdate)
-        private val end_date : TextView = itemView.findViewById(R.id.funsys_item_enddate)
-        private val title : TextView = itemView.findViewById(R.id.funsys_item_title)
+    inner class FunsysViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val start_date: TextView = itemView.findViewById(R.id.funsys_item_startdate)
+        private val end_date: TextView = itemView.findViewById(R.id.funsys_item_enddate)
+        private val title: TextView = itemView.findViewById(R.id.funsys_item_title)
         private val favorite: ImageView = itemView.findViewById(R.id.funsys_star_img)
 
-        fun bind(item : FunsysDataclass.FunsysDataclassItem) {
+        fun bind(item: FunsysDataclass.FunsysDataclassItem) {
             start_date.text = item.startDate
             end_date.text = item.end_date
             title.text = item.title
@@ -95,61 +97,58 @@ class FunsysAdapter: RecyclerView.Adapter<FunsysAdapter.FunsysViewHolder>() {
             favorite.setOnClickListener {
                 item.favorites = !item.favorites
                 favorite.isSelected = item.favorites
-                val studentId = MyApplication.prefs.getSchoolNumber("schoolNumber","")
+                val studentId = MyApplication.prefs.getSchoolNumber("schoolNumber", "")
                 //favorite 이 true 일 때
                 if (item.favorites) {
                     favorite.setImageResource(R.drawable.selected_star)
-                    addFavorite(studentId, item.id)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        addFavorite(studentId, item.id)
+                    }
+
                 } else {
                     favorite.setImageResource(R.drawable.unselected_star)
-                    deleteFavorite(studentId, item.id)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        deleteFavorite(studentId, item.id)
+                    }
                 }
             }
         }
 
 
         //즐겨찾기 post api 호출 함수
-        private fun addFavorite(studentId:String, itemId: Int){
+        private suspend fun addFavorite(studentId: String, itemId: Int) {
             val retrofit = RetrofitConnection.getInstance()
 
             val service = retrofit.create(FunsysAPIService::class.java)
 
-            service.addFavorite(studentId, itemId).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        Log.d("ApiService", "즐겨찾기 추가 성공")
-                        Log.d("ApiService", "즐겨찾기 추가 성공")
-                    } else {
-                        Log.d("ApiService", "즐겨찾기 추가 실패: ${response.errorBody()}")
-                    }
+            try {
+                val response = service.addFavorite(studentId, itemId)
+                if (response.isSuccessful) {
+                    Log.d("ApiService", "즐겨찾기 추가 성공")
+                } else {
+                    Log.d("ApiService", "즐겨찾기 추가 실패: ${response.errorBody()}")
                 }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("ApiService", "즐겨찾기 추가 실패: $t")
-                }
-            })
-
+            } catch (e: Exception) {
+                Log.e("ApiService", "즐겨찾기 추가 실패: $e")
+            }
         }
 
         //즐겨찾기 delete 함수
-        private fun deleteFavorite(studentId: String,itemId: Int){
+        private suspend fun deleteFavorite(studentId: String, itemId: Int) {
             val retrofit = RetrofitConnection.getInstance()
             val service = retrofit.create(FunsysAPIService::class.java)
 
             //delete api 호출
-            service.deleteFavorite(studentId,itemId).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        Log.d("ApiService","즐겨찾기 삭제 성공")
-                    }else{
-                        Log.d("ApiService","즐겨찾기 삭제 실패 ${response.errorBody()}")
-                    }
+            try {
+                val response = service.deleteFavorite(studentId, itemId)
+                if (response.isSuccessful) {
+                    Log.d("ApiService", "즐겨찾기 삭제 성공")
+                } else {
+                    Log.d("ApiService", "즐겨찾기 삭제 실패 ${response.errorBody()}")
                 }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("ApiService","즐겨찾기 삭제 실패 : $t")
-                }
-            })
+            } catch (e: Exception) {
+                Log.e("ApiService", "즐겨찾기 삭제 실패: $e")
             }
         }
     }
+}

@@ -6,9 +6,12 @@ import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.MaiN.main_android.SharedPreference.MyApplication
 import com.MaiN.main_android.retrofit.RetrofitConnection
 import com.MaiN.main_android.retrofit.UserAPIService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,7 +45,9 @@ class WebViewActivity : AppCompatActivity() {
                                 //학번을 shared preferences 에 저장
                                 val schoolNumberWithoutQuotes = schoolNumber.replace("\"","")
                                 MyApplication.prefs.setSchoolNumber("schoolNumber",schoolNumberWithoutQuotes)
-                                addUser(schoolNumberWithoutQuotes)
+                                lifecycleScope.launch(Dispatchers.IO) {
+                                    addUser(schoolNumberWithoutQuotes)
+                                }
                                 MyApplication.prefs.setIsLogin("isLogin",true) //로그인 상태 true 로 저장
                             }
                             navigateToHome()
@@ -68,25 +73,19 @@ class WebViewActivity : AppCompatActivity() {
 
 
     //addUser API 호출 (mysql 에 저장)
-    private fun addUser(value:String) {
+    private suspend fun addUser(value:String) {
         val retrofit = RetrofitConnection.getInstance()
         val service = retrofit.create(UserAPIService::class.java)
 
-        val user = UserAPIService.User(value)
-        val call = service.addUser(user)
-        call.enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.isSuccessful) {
-                    Log.d("UserAPI", "데이터베이스에 학번 추가 성공")
-                } else {
-                    Log.d("UserAPI", "데이터베이스에 학번 추가 실패")
-                }
-            }
-
-            override fun onFailure(call: Call<Void>, t: Throwable) {
+        try {
+            val response = service.addUser(UserAPIService.User(value))
+            if (response.isSuccessful) {
+                Log.d("UserAPI", "데이터베이스에 학번 추가 성공")
+            } else {
                 Log.d("UserAPI", "데이터베이스에 학번 추가 실패")
             }
-        })
-
+        } catch (e: Exception) {
+            Log.e("UserAPI", "데이터베이스에 학번 추가 실패: $e")
+        }
     }
 }

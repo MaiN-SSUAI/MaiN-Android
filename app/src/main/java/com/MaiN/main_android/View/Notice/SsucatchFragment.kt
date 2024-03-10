@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +30,9 @@ import kotlinx.coroutines.withContext
 
 class SsucatchFragment : Fragment() {
 
-    private  lateinit var adapter : SsucatchAdapter
-    private val retrofitAPI = RetrofitConnection.getInstance().create(SsucatchAPIService::class.java)
+    private lateinit var adapter: SsucatchAdapter
+    private val retrofitAPI =
+        RetrofitConnection.getInstance().create(SsucatchAPIService::class.java)
 
     private lateinit var progressBar: ProgressBar
 
@@ -45,19 +47,18 @@ class SsucatchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var selectedCategory:String="전체"
+        var selectedCategory: String = "전체"
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.ssucath_recyclerView)
-        adapter = SsucatchAdapter()
+        adapter = SsucatchAdapter(lifecycleScope)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         val switch: SwitchCompat = view.findViewById(R.id.switch3)
-        switch.setOnCheckedChangeListener{ _, isCecked->
-            if(isCecked) {
+        switch.setOnCheckedChangeListener { _, isCecked ->
+            if (isCecked) {
                 adapter.filterFavorites()
-            }
-            else{
+            } else {
                 adapter.clearFilter()
             }
         }
@@ -65,16 +66,22 @@ class SsucatchFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar3)
         progressBar.isIndeterminate = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            progressBar.indeterminateDrawable.colorFilter = BlendModeColorFilter(Color.parseColor("#03A9F4"), BlendMode.SRC_ATOP)
+            progressBar.indeterminateDrawable.colorFilter =
+                BlendModeColorFilter(Color.parseColor("#03A9F4"), BlendMode.SRC_ATOP)
         } else {
             @Suppress("DEPRECATION")
-            progressBar.indeterminateDrawable.setColorFilter(Color.parseColor("#03A9F4"), PorterDuff.Mode.SRC_ATOP)
+            progressBar.indeterminateDrawable.setColorFilter(
+                Color.parseColor("#03A9F4"),
+                PorterDuff.Mode.SRC_ATOP
+            )
         }
 
-        fetchNotifications()
+        lifecycleScope.launch {
+            fetchNotifications()
+        }
 
         val BackButton = view.findViewById<ImageView>(R.id.imageView9)
-        BackButton.setOnClickListener{
+        BackButton.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
@@ -93,22 +100,36 @@ class SsucatchFragment : Fragment() {
 
 
         //선택된 카테고리만 보기
-        val categories = listOf(categoryAll,category1,category2,category3,category4,category5,category6,category7,category8,category9,category10,category11)
+        val categories = listOf(
+            categoryAll,
+            category1,
+            category2,
+            category3,
+            category4,
+            category5,
+            category6,
+            category7,
+            category8,
+            category9,
+            category10,
+            category11
+        )
 
         fun updateCategoryViews() {
-            for(category in categories){
+            for (category in categories) {
                 category.isSelected = (category.tag as String == selectedCategory)
-                category.background = ContextCompat.getDrawable(requireContext(),R.drawable.category_background)
+                category.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.category_background)
             }
         }
 
-        for(category in categories){
-            category.setOnClickListener{
+        for (category in categories) {
+            category.setOnClickListener {
                 selectedCategory = it.tag as String
                 category.isSelected = true
-                if(selectedCategory=="전체"){
+                if (selectedCategory == "전체") {
                     adapter.clearFilter()
-                }else{
+                } else {
                     adapter.filterCategory(selectedCategory)
                 }
                 updateCategoryViews()
@@ -117,21 +138,28 @@ class SsucatchFragment : Fragment() {
     }
 
 
+    private suspend fun fetchNotifications() {
+        progressBar.visibility = View.VISIBLE
+        val studentID = MyApplication.prefs.getSchoolNumber("schoolNumber", "")
 
-    private fun fetchNotifications() {
-        lifecycleScope.launch{
-            progressBar.visibility = View.VISIBLE
-            val studentID = MyApplication.prefs.getSchoolNumber("schoolNumber","")
-            val response = withContext(Dispatchers.IO) {retrofitAPI.getSsucatchNotiAll(studentID).execute()}
-            if (response.isSuccessful) {
-                val notifications = response.body()
-                notifications?.let { adapter.setItems(it)}
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = retrofitAPI.getSsucatchNotiAll(studentID)
+                if (response.isSuccessful) {
+                    val notifications = response.body()
+                    withContext(Dispatchers.Main) {
+                        notifications?.let { adapter.setItems(it) }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("ApiService", "ssucatch noti fetch failed: $e")
+            } finally {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                }
             }
-            progressBar.visibility = View.GONE
         }
     }
-
-
 
 
 }

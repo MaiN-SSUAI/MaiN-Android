@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import com.MaiN.main_android.R
 import com.MaiN.main_android.SharedPreference.MyApplication
@@ -14,14 +15,15 @@ import com.MaiN.main_android.View.Notice.Ssucatch_WebView
 import com.MaiN.main_android.retrofit.RetrofitConnection
 import com.MaiN.main_android.retrofit.SsucatchAPIService
 import com.MaiN.main_android.retrofit.SsucatchDataclass
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class SsucatchAdapter() :RecyclerView.Adapter<SsucatchAdapter.SsucatchViewHolder>() {
+class SsucatchAdapter(
+    private val lifecycleScope: LifecycleCoroutineScope
+) : RecyclerView.Adapter<SsucatchAdapter.SsucatchViewHolder>() {
     private val allItems = ArrayList<SsucatchDataclass.SsucatchDataclassItem>()
     private var items = ArrayList<SsucatchDataclass.SsucatchDataclassItem>()
-    var selectedCategory:String = "전체"
+    var selectedCategory: String = "전체"
 
     fun setItems(items: List<SsucatchDataclass.SsucatchDataclassItem>) {
         this.allItems.clear()
@@ -42,7 +44,7 @@ class SsucatchAdapter() :RecyclerView.Adapter<SsucatchAdapter.SsucatchViewHolder
         notifyDataSetChanged()
     }
 
-    fun filterCategory(category:String){
+    fun filterCategory(category: String) {
         items = ArrayList(allItems.filter { it.category == category })
         notifyDataSetChanged()
     }
@@ -52,7 +54,7 @@ class SsucatchAdapter() :RecyclerView.Adapter<SsucatchAdapter.SsucatchViewHolder
         viewType: Int
     ): SsucatchAdapter.SsucatchViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.ssucatch_recycler,parent,false)
+            .inflate(R.layout.ssucatch_recycler, parent, false)
         return SsucatchViewHolder(view)
     }
 
@@ -62,24 +64,24 @@ class SsucatchAdapter() :RecyclerView.Adapter<SsucatchAdapter.SsucatchViewHolder
 
     override fun getItemCount(): Int = items.size
 
-    inner class SsucatchViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
+    inner class SsucatchViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val date: TextView = itemView.findViewById<TextView>(R.id.ssucatch_item_date)
-        private val title : TextView = itemView.findViewById(R.id.ssucatch_item_title)
+        private val title: TextView = itemView.findViewById(R.id.ssucatch_item_title)
         private val favorite: ImageView = itemView.findViewById(R.id.ssucatch_star_img)
         private val category: TextView = itemView.findViewById(R.id.ssucatchCategoryText)
         private val progress: TextView = itemView.findViewById(R.id.ssucatchProgressText)
 
 
-        fun bind(item : SsucatchDataclass.SsucatchDataclassItem) {
+        fun bind(item: SsucatchDataclass.SsucatchDataclassItem) {
             date.text = item.sDate
             title.text = item.title
             category.text = item.category
             progress.text = item.progress
 
             //progress 비어있으면 textview 안보이게
-            if(item.progress.isEmpty()){
+            if (item.progress.isEmpty()) {
                 progress.visibility = View.GONE
-            }else{
+            } else {
                 progress.text = item.progress
                 progress.visibility = View.VISIBLE
             }
@@ -92,72 +94,65 @@ class SsucatchAdapter() :RecyclerView.Adapter<SsucatchAdapter.SsucatchViewHolder
                 favorite.setImageResource(R.drawable.unselected_star)
             }
 
-            itemView.setOnClickListener{
+            itemView.setOnClickListener {
                 val context = itemView.context
                 val intent = Intent(context, Ssucatch_WebView::class.java)
-                intent.putExtra("url",item.link)
+                intent.putExtra("url", item.link)
                 context.startActivity(intent)
             }
 
-            favorite.setOnClickListener{
+            favorite.setOnClickListener {
                 item.favorites = !item.favorites
                 favorite.isSelected = item.favorites
-                val studentId = MyApplication.prefs.getSchoolNumber("schoolNumber","")
+                val studentId = MyApplication.prefs.getSchoolNumber("schoolNumber", "")
                 //favorite 이 true 일 때
-                if(item.favorites) {
+                if (item.favorites) {
                     favorite.setImageResource(R.drawable.selected_star)
-                    addFavorite(studentId,item.id)
-                }else{
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        addFavorite(studentId, item.id)
+                    }
+                } else {
                     favorite.setImageResource(R.drawable.unselected_star)
-                    deleteFavorite(studentId,item.id)
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        deleteFavorite(studentId, item.id)
+                    }
                 }
             }
         }
-        //즐겨찾기 post api 호출 함수
-        private fun addFavorite(studentId:String, itemId: Int){
-            val retrofit = RetrofitConnection.getInstance()
 
+        //즐겨찾기 post api 호출 함수
+        private suspend fun addFavorite(studentId: String, itemId: Int) {
+            val retrofit = RetrofitConnection.getInstance()
             val service = retrofit.create(SsucatchAPIService::class.java)
 
-            service.addFavorite(studentId, itemId).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        Log.d("ApiService", "즐겨찾기 추가 성공")
-                    } else {
-                        val errorBody = response.errorBody()?.string()
-                        Log.d("ApiService", "즐겨찾기 추가 실패: $errorBody")
-                    }
+            try {
+                val response = service.addFavorite(studentId, itemId)
+                if (response.isSuccessful) {
+                    Log.d("ApiService", "즐겨찾기 추가 성공")
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.d("ApiService", "즐겨찾기 추가 실패: $errorBody")
                 }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("ApiService", "즐겨찾기 추가 실패: $t")
-                }
-            })
-
+            } catch (e: Exception) {
+                Log.d("ApiService", "즐겨찾기 추가 실패: $e")
+            }
         }
 
         //즐겨찾기 delete 함수
-        private fun deleteFavorite(studentId: String,itemId: Int){
+        private suspend fun deleteFavorite(studentId: String, itemId: Int) {
             val retrofit = RetrofitConnection.getInstance()
             val service = retrofit.create(SsucatchAPIService::class.java)
 
-            //delete api 호출
-            service.deleteFavorite(studentId,itemId).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        Log.d("ApiService","즐겨찾기 삭제 성공")
-                    }else{
-                        Log.d("ApiService","즐겨찾기 삭제 실패 ${response.errorBody()}")
-                    }
+            try {
+                val response = service.deleteFavorite(studentId, itemId)
+                if (response.isSuccessful) {
+                    Log.d("ApiService", "즐겨찾기 삭제 성공")
+                } else {
+                    Log.d("ApiService", "즐겨찾기 삭제 실패 ${response.errorBody()}")
                 }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("ApiService","즐겨찾기 삭제 실패 : $t")
-                }
-            })
-
+            } catch (e: Exception) {
+                Log.d("ApiService", "즐겨찾기 삭제 실패 : $e")
+            }
         }
-
-
     }
 }

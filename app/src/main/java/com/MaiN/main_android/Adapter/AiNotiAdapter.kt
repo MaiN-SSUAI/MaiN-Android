@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.MaiN.main_android.R
 import com.MaiN.main_android.SharedPreference.MyApplication
@@ -14,11 +17,16 @@ import com.MaiN.main_android.View.Notice.AiNoti_WebView
 import com.MaiN.main_android.retrofit.AiNotiAPIService
 import com.MaiN.main_android.retrofit.AiNotiDataclass
 import com.MaiN.main_android.retrofit.RetrofitConnection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AiNotiAdapter(): RecyclerView.Adapter<AiNotiAdapter.AiNotiViewHolder>() {
+class AiNotiAdapter(
+    private val lifecycleCoroutineScope: LifecycleCoroutineScope
+): RecyclerView.Adapter<AiNotiAdapter.AiNotiViewHolder>() {
     private val allItems = ArrayList<AiNotiDataclass.AiNotiDataclassItem>()
     private var items = ArrayList<AiNotiDataclass.AiNotiDataclassItem>()
 
@@ -90,57 +98,53 @@ class AiNotiAdapter(): RecyclerView.Adapter<AiNotiAdapter.AiNotiViewHolder>() {
                 if(item.favorites) {
                     favorite.setImageResource(R.drawable.selected_star)
                     val studentId=MyApplication.prefs.getSchoolNumber("schoolNumber","")
-                    addFavorite(studentId,item.id)
+                    lifecycleCoroutineScope.launch(Dispatchers.IO) {
+                        addFavorite(studentId,item.id)
+                    }
                 }else{
                     favorite.setImageResource(R.drawable.unselected_star)
                     val studentId=MyApplication.prefs.getSchoolNumber("schoolNumber","")
-                    deleteFavorite(studentId,item.id)
+                    lifecycleCoroutineScope.launch(Dispatchers.IO) {
+                        deleteFavorite(studentId,item.id)
+                    }
                 }
             }
         }
 
         //즐겨찾기 post api 호출 함수
-        private fun addFavorite(studentId:String, itemId: Int){
+        private suspend fun addFavorite(studentId:String, itemId: Int){
             val retrofit = RetrofitConnection.getInstance()
 
             val service = retrofit.create(AiNotiAPIService::class.java)
 
-            service.addFavorite(studentId, itemId).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        Log.d("ApiService", "즐겨찾기 추가 성공")
-                    } else {
-                        Log.d("ApiService", "즐겨찾기 추가 실패: ${response.errorBody()}")
-                    }
+            try {
+                val response = service.addFavorite(studentId, itemId)
+                if (response.isSuccessful) {
+                    Log.d("ApiService", "즐겨찾기 추가 성공")
+                } else {
+                    Log.d("ApiService", "즐겨찾기 추가 실패: ${response.errorBody()}")
                 }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("ApiService", "즐겨찾기 추가 실패: $t")
-                }
-            })
-
+            } catch (e: Exception) {
+                Log.e("ApiService", "즐겨찾기 추가 실패: $e")
+            }
         }
 
         //즐겨찾기 delete 함수
-        private fun deleteFavorite(studentId: String,itemId: Int){
+        private suspend fun deleteFavorite(studentId: String,itemId: Int){
             val retrofit = RetrofitConnection.getInstance()
             val service = retrofit.create(AiNotiAPIService::class.java)
 
             //delete api 호출
-            service.deleteFavorite(studentId,itemId).enqueue(object : Callback<Void> {
-                override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                    if (response.isSuccessful) {
-                        Log.d("ApiService","즐겨찾기 삭제 성공")
-                    }else{
-                        Log.d("ApiService","즐겨찾기 삭제 실패 ${response.errorBody()}")
-                    }
+            try {
+                val response = service.deleteFavorite(studentId, itemId)
+                if (response.isSuccessful) {
+                    Log.d("ApiService", "즐겨찾기 삭제 성공")
+                } else {
+                    Log.d("ApiService", "즐겨찾기 삭제 실패: ${response.errorBody()}")
                 }
-
-                override fun onFailure(call: Call<Void>, t: Throwable) {
-                    Log.d("ApiService","즐겨찾기 삭제 실패 : $t")
-                }
-            })
-
+            } catch (e: Exception) {
+                Log.e("ApiService", "즐겨찾기 삭제 실패: $e")
+            }
         }
     }
 }

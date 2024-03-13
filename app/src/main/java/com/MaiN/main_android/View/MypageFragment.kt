@@ -16,7 +16,7 @@ import com.MaiN.main_android.SharedPreference.PreferenceUtil
 
 
 class MypageFragment : Fragment() {
-    private lateinit var schoolNumberTextView : TextView
+    private lateinit var schoolNumberTextView: TextView
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -24,7 +24,7 @@ class MypageFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.mypage_fragment,container,false)
+        val view = inflater.inflate(R.layout.mypage_fragment, container, false)
         schoolNumberTextView = view.findViewById(R.id.textSchoolNumber)
         return view
     }
@@ -32,7 +32,7 @@ class MypageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val prefs = PreferenceUtil(requireContext())
-        val schoolNumber = prefs.getSchoolNumber("schoolNumber","None")
+        val schoolNumber = prefs.getSchoolNumber("schoolNumber", "None")
         schoolNumberTextView.text = schoolNumber
         setLogoutButton()
     }
@@ -43,10 +43,10 @@ class MypageFragment : Fragment() {
         logoutButton?.setOnClickListener {
             //저장된 학번 정보 삭제
             MyApplication.prefs.delSchoolNumber()
-            MyApplication.prefs.setIsLogin("isLogin",false)
+            MyApplication.prefs.setIsLogin("isLogin", false)
 
             //모든 액티비티 스택 클리어 후 첫 화면으로 돌아감
-            val intent = Intent(activity,MainActivity::class.java)
+            val intent = Intent(activity, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
             startActivity(intent)
             requireActivity().finish()

@@ -2,7 +2,7 @@ package com.MaiN.main_android.retrofit
 
 import com.google.gson.annotations.SerializedName
 
-class FunsysDataclass : ArrayList<FunsysDataclass.FunsysDataclassItem>(){
+class FunsysDataclass : ArrayList<FunsysDataclass.FunsysDataclassItem>() {
     data class FunsysDataclassItem(
         @SerializedName("end_date")
         val end_date: String,

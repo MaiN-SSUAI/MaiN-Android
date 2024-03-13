@@ -6,24 +6,23 @@
         android:enabled="true"
         android:icon="@drawable/selector_noti_ic"
         android:title="공지사항"
-        app:showAsAction="always"
-        />
+        app:showAsAction="always" />
     <item
         android:id="@+id/tab_menu_reserv"
         android:enabled="true"
         android:icon="@drawable/selector_reserv_ic"
         android:title="예약"
-        app:showAsAction="always"/>
-<!--    <item-->
-<!--        android:id="@+id/tab_menu_prepare"-->
-<!--        android:enabled="true"-->
-<!--        android:icon="@drawable/selector_preparing_ic"-->
-<!--        android:title="준비 중"-->
-<!--        app:showAsAction="always"/>-->
+        app:showAsAction="always" />
+    <!--    <item-->
+    <!--        android:id="@+id/tab_menu_prepare"-->
+    <!--        android:enabled="true"-->
+    <!--        android:icon="@drawable/selector_preparing_ic"-->
+    <!--        android:title="준비 중"-->
+    <!--        app:showAsAction="always"/>-->
     <item
         android:id="@+id/tab_menu_mypage"
         android:enabled="true"
         android:icon="@drawable/selector_mypage_ic"
         android:title="마이 페이지"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 </menu>

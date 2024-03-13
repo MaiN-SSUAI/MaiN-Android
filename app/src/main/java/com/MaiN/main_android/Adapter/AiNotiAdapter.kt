@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 class AiNotiAdapter(
     private val lifecycleScope: LifecycleCoroutineScope
-): RecyclerView.Adapter<AiNotiAdapter.AiNotiViewHolder>() {
+) : RecyclerView.Adapter<AiNotiAdapter.AiNotiViewHolder>() {
     private val allItems = ArrayList<AiNotiDataclass.AiNotiDataclassItem>()
     private var items = ArrayList<AiNotiDataclass.AiNotiDataclassItem>()
 
@@ -48,7 +48,7 @@ class AiNotiAdapter(
         viewType: Int
     ): AiNotiAdapter.AiNotiViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.ainoti_recycler,parent,false)
+            .inflate(R.layout.ainoti_recycler, parent, false)
         return AiNotiViewHolder(view)
     }
 
@@ -59,12 +59,12 @@ class AiNotiAdapter(
     override fun getItemCount(): Int = items.size
 
     inner class AiNotiViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val date : TextView = itemView.findViewById(R.id.ai_item_date)
-        private val title : TextView = itemView.findViewById(R.id.ai_item_title)
-        private val favorite : ImageView = itemView.findViewById(R.id.ainoti_star_img) //즐겨찾기 버튼
+        private val date: TextView = itemView.findViewById(R.id.ai_item_date)
+        private val title: TextView = itemView.findViewById(R.id.ai_item_title)
+        private val favorite: ImageView = itemView.findViewById(R.id.ainoti_star_img) //즐겨찾기 버튼
 
 
-        fun bind(item : AiNotiDataclass.AiNotiDataclassItem) {
+        fun bind(item: AiNotiDataclass.AiNotiDataclassItem) {
             date.text = item.date
             title.text = item.title
 
@@ -80,33 +80,33 @@ class AiNotiAdapter(
             itemView.setOnClickListener {
                 val context = itemView.context
                 val intent = Intent(context, AiNoti_WebView::class.java)
-                intent.putExtra("url",item.link)
+                intent.putExtra("url", item.link)
                 context.startActivity(intent)
             }
 
             //즐겨찾기 버튼 클릭시 동작
-            favorite.setOnClickListener{
+            favorite.setOnClickListener {
                 item.favorites = !item.favorites
                 favorite.isSelected = item.favorites
                 //favorite 이 true 일 때
-                if(item.favorites) {
+                if (item.favorites) {
                     favorite.setImageResource(R.drawable.selected_star)
-                    val studentId=MyApplication.prefs.getSchoolNumber("schoolNumber","")
+                    val studentId = MyApplication.prefs.getSchoolNumber("schoolNumber", "")
                     lifecycleScope.launch(Dispatchers.IO) {
-                        addFavorite(studentId,item.id)
+                        addFavorite(studentId, item.id)
                     }
-                }else{
+                } else {
                     favorite.setImageResource(R.drawable.unselected_star)
-                    val studentId=MyApplication.prefs.getSchoolNumber("schoolNumber","")
+                    val studentId = MyApplication.prefs.getSchoolNumber("schoolNumber", "")
                     lifecycleScope.launch(Dispatchers.IO) {
-                        deleteFavorite(studentId,item.id)
+                        deleteFavorite(studentId, item.id)
                     }
                 }
             }
         }
 
         //즐겨찾기 post api 호출 함수
-        private suspend fun addFavorite(studentId:String, itemId: Int){
+        private suspend fun addFavorite(studentId: String, itemId: Int) {
             val retrofit = RetrofitConnection.getInstance()
 
             val service = retrofit.create(AiNotiAPIService::class.java)
@@ -124,7 +124,7 @@ class AiNotiAdapter(
         }
 
         //즐겨찾기 delete 함수
-        private suspend fun deleteFavorite(studentId: String,itemId: Int){
+        private suspend fun deleteFavorite(studentId: String, itemId: Int) {
             val retrofit = RetrofitConnection.getInstance()
             val service = retrofit.create(AiNotiAPIService::class.java)
 

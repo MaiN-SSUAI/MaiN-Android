@@ -2,7 +2,7 @@ package com.MaiN.main_android.retrofit
 
 import com.google.gson.annotations.SerializedName
 
-class AiNotiDataclass : ArrayList<AiNotiDataclass.AiNotiDataclassItem>(){
+class AiNotiDataclass : ArrayList<AiNotiDataclass.AiNotiDataclassItem>() {
     data class AiNotiDataclassItem(
         @SerializedName("date")
         val date: String,

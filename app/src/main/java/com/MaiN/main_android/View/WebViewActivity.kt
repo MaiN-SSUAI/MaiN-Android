@@ -12,9 +12,6 @@ import com.MaiN.main_android.retrofit.RetrofitConnection
 import com.MaiN.main_android.retrofit.UserAPIService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class WebViewActivity : AppCompatActivity() {
     private lateinit var webView: WebView
@@ -37,21 +34,26 @@ class WebViewActivity : AppCompatActivity() {
                     view?.loadUrl("https://saint.ssu.ac.kr/webSSUMain/main_student.jsp")
 
                     //javascript로 텍스트 가져와서 학부 확인
-                    val jsDepartment = "document.querySelector('body > div > div.main_wrap > div.main_left > div.main_box09 > div.main_box09_con_w > ul > li:nth-child(2) > dl > dd > a > strong').innerText"
+                    val jsDepartment =
+                        "document.querySelector('body > div > div.main_wrap > div.main_left > div.main_box09 > div.main_box09_con_w > ul > li:nth-child(2) > dl > dd > a > strong').innerText"
                     view?.evaluateJavascript(jsDepartment) { value ->
                         if (value == "\"AI융합학부\"") { //가져온 text가 ai융합학부면 HomeActivity로 이동
-                            val jsSchoolNumber = "document.querySelector('body > div > div.main_wrap > div.main_left > div.main_box09 > div.main_box09_con_w > ul > li:nth-child(1) > dl > dd > a > strong').innerText"
-                            view.evaluateJavascript(jsSchoolNumber) {schoolNumber->
+                            val jsSchoolNumber =
+                                "document.querySelector('body > div > div.main_wrap > div.main_left > div.main_box09 > div.main_box09_con_w > ul > li:nth-child(1) > dl > dd > a > strong').innerText"
+                            view.evaluateJavascript(jsSchoolNumber) { schoolNumber ->
                                 //학번을 shared preferences 에 저장
-                                val schoolNumberWithoutQuotes = schoolNumber.replace("\"","")
-                                MyApplication.prefs.setSchoolNumber("schoolNumber",schoolNumberWithoutQuotes)
+                                val schoolNumberWithoutQuotes = schoolNumber.replace("\"", "")
+                                MyApplication.prefs.setSchoolNumber(
+                                    "schoolNumber",
+                                    schoolNumberWithoutQuotes
+                                )
                                 lifecycleScope.launch(Dispatchers.IO) {
                                     addUser(schoolNumberWithoutQuotes)
                                 }
-                                MyApplication.prefs.setIsLogin("isLogin",true) //로그인 상태 true 로 저장
+                                MyApplication.prefs.setIsLogin("isLogin", true) //로그인 상태 true 로 저장
                             }
                             navigateToHome()
-                            Log.d("navigateToHome","홈화면으로 이동 메소드 호출")
+                            Log.d("navigateToHome", "홈화면으로 이동 메소드 호출")
                         }
                     }
                 } else {
@@ -73,7 +75,7 @@ class WebViewActivity : AppCompatActivity() {
 
 
     //addUser API 호출 (mysql 에 저장)
-    private suspend fun addUser(value:String) {
+    private suspend fun addUser(value: String) {
         val retrofit = RetrofitConnection.getInstance()
         val service = retrofit.create(UserAPIService::class.java)
 

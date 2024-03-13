@@ -87,8 +87,8 @@
                     android:paddingEnd="13dp"
                     android:paddingBottom="2dp"
                     android:text="장학"
-                    android:textSize="13sp"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/ssucatchProgressText"
@@ -104,8 +104,8 @@
                     android:paddingEnd="13dp"
                     android:paddingBottom="2dp"
                     android:text="진행"
-                    android:textSize="13sp"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="13sp" />
 
 
             </RelativeLayout>

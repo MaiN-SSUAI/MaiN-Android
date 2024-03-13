@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.MaiN.main_android.R
 
 class AiNoti_WebView : AppCompatActivity() {
-    override fun onCreate(savedInstanceState : Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.ainoti_webview)
 
@@ -17,12 +17,12 @@ class AiNoti_WebView : AppCompatActivity() {
 
         val url = intent.getStringExtra("url")
 
-        if(url!=null) {
+        if (url != null) {
             webView.loadUrl(url)
         }
 
         val BackButton = findViewById<ImageView>(R.id.imageView4)
-        BackButton.setOnClickListener{
+        BackButton.setOnClickListener {
             finish()
         }
     }

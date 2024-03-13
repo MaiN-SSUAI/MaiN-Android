@@ -20,10 +20,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val prefs = PreferenceUtil(this)
-        val isLogin = prefs.getIsLogin("isLogin",false)
+        val isLogin = prefs.getIsLogin("isLogin", false)
 
-        if(isLogin){
-            val intent = Intent(this,HomeActivity::class.java)
+        if (isLogin) {
+            val intent = Intent(this, HomeActivity::class.java)
             startActivity(intent)
             finish()
         }
@@ -34,12 +34,11 @@ class MainActivity : AppCompatActivity() {
         setLoginButton()
 
 
-
     }
 
     //MaiN 글씨 커스텀
-    private fun styleTextView(){
-        val textView= findViewById<TextView>(R.id.textView)
+    private fun styleTextView() {
+        val textView = findViewById<TextView>(R.id.textView)
         val text = "MaiN"
         val spannableString = SpannableString(text)
 
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         val endIndex = startIndex + "ai".length
 
         val colorSpan = ForegroundColorSpan(Color.parseColor("#60B3FF"))
-        spannableString.setSpan(colorSpan,startIndex,endIndex,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(colorSpan, startIndex, endIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         textView.text = spannableString
     }
@@ -57,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         val loginButton: Button = findViewById(R.id.login_button)
         loginButton.setOnClickListener {
 
-            val intent = Intent(this,AgreeViewActivity::class.java)
+            val intent = Intent(this, AgreeViewActivity::class.java)
             startActivity(intent)
 
             finish()

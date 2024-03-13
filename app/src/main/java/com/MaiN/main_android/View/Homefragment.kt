@@ -30,10 +30,13 @@ class home_fragment : Fragment() {
     //클릭시 ai융합 공지사항으로 이동
     private fun moveToAinoti() {
         val AinotiCard = view?.findViewById<CardView>(R.id.aiCardView)
-        AinotiCard?.setOnClickListener{
+        AinotiCard?.setOnClickListener {
             val newFragment = AinotiFragment() // 이동하려는 프래그먼트
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.main_content, newFragment) // 'fragment_container'는 교체할 레이아웃의 ID입니다.
+            transaction.replace(
+                R.id.main_content,
+                newFragment
+            ) // 'fragment_container'는 교체할 레이아웃의 ID입니다.
             transaction.addToBackStack(null)
             transaction.commit()
         }
@@ -45,19 +48,19 @@ class home_fragment : Fragment() {
         SsucatchCard?.setOnClickListener {
             val newFragment = SsucatchFragment()
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.main_content,newFragment)
+            transaction.replace(R.id.main_content, newFragment)
             transaction.addToBackStack(null)
             transaction.commit()
         }
     }
 
     //클릭시 펀시스템 공지로 이동
-    private fun moveToFunsys(){
+    private fun moveToFunsys() {
         val FunsysCard = view?.findViewById<CardView>(R.id.funsysCardView)
         FunsysCard?.setOnClickListener {
             val newFragment = FunsysFragment()
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.replace(R.id.main_content,newFragment)
+            transaction.replace(R.id.main_content, newFragment)
             transaction.addToBackStack(null)
             transaction.commit()
         }

@@ -17,12 +17,12 @@ class Ssucatch_WebView : AppCompatActivity() {
 
         val url = intent.getStringExtra("url")
 
-        if(url!=null) {
+        if (url != null) {
             webView.loadUrl(url)
         }
 
         val BackButton = findViewById<ImageView>(R.id.imageView11)
-        BackButton.setOnClickListener{
+        BackButton.setOnClickListener {
             finish()
         }
     }

@@ -149,6 +149,7 @@ class ReservationViewModel : ViewModel() {
     }
 
     private fun showEvents(date: String, location: String) {
+        Log.d("KWK", "showEvents $date $location")
         viewModelScope.launch {
             retrofitAPI.showEvents(date, location).enqueue(
                 object : Callback<ReservDataclass> {
@@ -157,6 +158,7 @@ class ReservationViewModel : ViewModel() {
                         response: Response<ReservDataclass>
                     ) {
                         val cellUiStateList = response.body()?.toCellUiStateList()
+                        Log.d("KWK-showEvent-UCCESS", cellUiStateList.toString())
                         when (location) {
                             "세미나실1" -> {
                                 _stateFlow.update {

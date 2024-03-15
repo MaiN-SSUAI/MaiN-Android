@@ -11,15 +11,15 @@ android {
         applicationId "com.MaiN.main_android"
         minSdk 26
         targetSdk 33
-        versionCode 7
-        versionName "1.2"
+        versionCode 10
+        versionName "1.10"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         debug {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         release {

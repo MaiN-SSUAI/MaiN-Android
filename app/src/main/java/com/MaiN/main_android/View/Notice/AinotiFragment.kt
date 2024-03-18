@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,16 +45,15 @@ class AinotiFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.ainoti_recyclerView)
-        adapter = AiNotiAdapter()
+        adapter = AiNotiAdapter(lifecycleScope)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         val switch: SwitchCompat = view.findViewById(R.id.switch1)
-        switch.setOnCheckedChangeListener{ _, isCecked->
-            if(isCecked) {
+        switch.setOnCheckedChangeListener { _, isCecked ->
+            if (isCecked) {
                 adapter.filterFavorites()
-            }
-            else{
+            } else {
                 adapter.clearFilter()
             }
         }
@@ -62,10 +62,14 @@ class AinotiFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar1)
         progressBar.isIndeterminate = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            progressBar.indeterminateDrawable.colorFilter = BlendModeColorFilter(Color.parseColor("#03A9F4"), BlendMode.SRC_ATOP)
+            progressBar.indeterminateDrawable.colorFilter =
+                BlendModeColorFilter(Color.parseColor("#03A9F4"), BlendMode.SRC_ATOP)
         } else {
             @Suppress("DEPRECATION")
-            progressBar.indeterminateDrawable.setColorFilter(Color.parseColor("#03A9F4"), PorterDuff.Mode.SRC_ATOP)
+            progressBar.indeterminateDrawable.setColorFilter(
+                Color.parseColor("#03A9F4"),
+                PorterDuff.Mode.SRC_ATOP
+            )
         }
 
         fetchNotifications()
@@ -77,17 +81,28 @@ class AinotiFragment : Fragment() {
     }
 
     //학번 파라미터에 넣게 수정하기!!!@!@!!
+
+    // reformat this function to use coroutines
     private fun fetchNotifications() {
-        lifecycleScope.launch {
-            progressBar.visibility = View.VISIBLE
-            val studentID = MyApplication.prefs.getSchoolNumber("schoolNumber","")
-            val response = withContext(Dispatchers.IO) { retrofitAPI.getAiNotiAll(studentID).execute() }
-            if (response.isSuccessful) {
-                val notifications = response.body()
-                notifications?.let { adapter.setItems(it) }
+        progressBar.visibility = View.VISIBLE
+        val studentID = MyApplication.prefs.getSchoolNumber("schoolNumber", "")
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = retrofitAPI.getAiNotiAll(studentID)
+                if (response.isSuccessful) {
+                    val notifications = response.body()
+                    withContext(Dispatchers.Main) {
+                        notifications?.let { adapter.setItems(it) }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("AinotiFragment", "fetchNotifications: ${e.message}", e)
+            } finally {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                }
             }
-            progressBar.visibility = View.GONE
         }
     }
-
 }

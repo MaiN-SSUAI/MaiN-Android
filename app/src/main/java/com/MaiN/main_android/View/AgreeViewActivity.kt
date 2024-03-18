@@ -23,7 +23,10 @@ class AgreeViewActivity : AppCompatActivity() {
         agreeButton.setOnClickListener {
 
             val intent = Intent(this, WebViewActivity::class.java)
-            intent.putExtra("url", "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp")
+            intent.putExtra(
+                "url",
+                "https://smartid.ssu.ac.kr/Symtra_sso/smln.asp?apiReturnUrl=https%3A%2F%2Fsaint.ssu.ac.kr%2FwebSSO%2Fsso.jsp"
+            )
             startActivity(intent)
             finish()
         }

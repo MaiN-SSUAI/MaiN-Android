@@ -3,13 +3,13 @@
     android:color="@color/gray00"> <!--클릭시 색상-->
 
     <!--배경색-->
-    <item android:id = "@android:id/background">
+    <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <solid android:color="@color/white"/>
+            <solid android:color="@color/white" />
             <corners
                 android:radius="10dp"
                 android:topLeftRadius="10dp"
-                android:topRightRadius="10dp"/>
+                android:topRightRadius="10dp" />
         </shape>
     </item>
 </ripple>

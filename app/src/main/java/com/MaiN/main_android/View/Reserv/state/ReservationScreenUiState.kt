@@ -2,7 +2,6 @@ package com.MaiN.main_android.View.Reserv.state
 
 import androidx.compose.foundation.lazy.LazyListState
 import com.MaiN.main_android.View.Reserv.data.BottomSheetData
-import com.MaiN.main_android.View.Reserv.state.CellUiState
 
 data class ReservationScreenUiState(
     val year: Int = 0,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".View.Notice.SsucatchFragment">
@@ -62,18 +62,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
+        android:textOff=""
+        android:textOn=""
+        android:thumb="@drawable/thumb_selector"
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintHorizontal_bias="0.857"
         app:layout_constraintStart_toEndOf="@+id/textView24"
         app:layout_constraintTop_toTopOf="parent"
-
-        android:thumb="@drawable/thumb_selector"
-        app:track="@drawable/switch_track_selector"
-        app:thumbTextPadding="24dp"
         app:switchMinWidth="0dp"
-        android:textOff=""
-        android:textOn=""
-        />
+        app:thumbTextPadding="24dp"
+        app:track="@drawable/switch_track_selector" />
 
     <ProgressBar
         android:id="@+id/progressBar3"
@@ -102,184 +101,184 @@
 
             <TextView
                 android:id="@+id/categoryAll"
-                android:tag="전체"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="전체"
                 android:text="전체"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category1"
-                android:tag="학사"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="학사"
                 android:text="학사"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category2"
-                android:tag="장학"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="장학"
                 android:text="장학"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category3"
-                android:tag="국제교류"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="국제교류"
                 android:text="국제교류"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category4"
-                android:tag="외국인유학생"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="외국인유학생"
                 android:text="외국인유학생"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category5"
-                android:tag="채용"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="채용"
                 android:text="채용"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category6"
-                android:tag="비교과·행사"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="비교과·행사"
                 android:text="비교과·행사"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category7"
-                android:tag="교원채용"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="교원채용"
                 android:text="교원채용"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category8"
-                android:tag="교직"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="교직"
                 android:text="교직"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
 
             <TextView
                 android:id="@+id/category9"
-                android:tag="봉사"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="봉사"
                 android:text="봉사"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category10"
-                android:tag="기타"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="기타"
                 android:text="기타"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/category11"
-                android:tag="코로나19관련소식"
                 android:layout_width="75dp"
                 android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/category_background"
+                android:ellipsize="end"
                 android:gravity="center"
+                android:maxLines="1"
+                android:tag="코로나19관련소식"
                 android:text="코로나19관련소식"
                 android:textColor="@color/category_textcolor"
-                android:textSize="14sp"
-                android:ellipsize="end"
-                android:layout_marginEnd="10dp"
-                android:maxLines="1"/>
+                android:textSize="14sp" />
 
         </LinearLayout>
     </HorizontalScrollView>

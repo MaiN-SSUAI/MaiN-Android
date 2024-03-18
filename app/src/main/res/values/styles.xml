@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="CalendarTheme" parent="Theme.AppCompat.Light.Dialog">
         <!-- 상단 Title 배경색 -->
         <item name="colorAccent">@color/calendarTitleColor</item>
@@ -25,9 +26,9 @@
         <!-- 취소/확인버튼 색상 -->
         <item name="android:textColor">@color/reservButtonBlue</item>
 
-<!--        <item name="android:textSize">20sp</item>-->
+        <!--        <item name="android:textSize">20sp</item>-->
 
-<!--        <item name="cornerSize">16dp</item>-->
+        <!--        <item name="cornerSize">16dp</item>-->
 
 
     </style>

@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,16 +45,15 @@ class FunsysFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.funsys_recyclerView)
-        adapter = FunsysAdapter()
+        adapter = FunsysAdapter(lifecycleScope)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         val switch: SwitchCompat = view.findViewById(R.id.switch2)
-        switch.setOnCheckedChangeListener{ _, isCecked->
-            if(isCecked) {
+        switch.setOnCheckedChangeListener { _, isCecked ->
+            if (isCecked) {
                 adapter.filterFavorites()
-            }
-            else{
+            } else {
                 adapter.clearFilter()
             }
         }
@@ -61,30 +61,46 @@ class FunsysFragment : Fragment() {
         progressBar = view.findViewById(R.id.progressBar2)
         progressBar.isIndeterminate = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            progressBar.indeterminateDrawable.colorFilter = BlendModeColorFilter(Color.parseColor("#03A9F4"), BlendMode.SRC_ATOP)
+            progressBar.indeterminateDrawable.colorFilter =
+                BlendModeColorFilter(Color.parseColor("#03A9F4"), BlendMode.SRC_ATOP)
         } else {
             @Suppress("DEPRECATION")
-            progressBar.indeterminateDrawable.setColorFilter(Color.parseColor("#03A9F4"), PorterDuff.Mode.SRC_ATOP)
+            progressBar.indeterminateDrawable.setColorFilter(
+                Color.parseColor("#03A9F4"),
+                PorterDuff.Mode.SRC_ATOP
+            )
         }
 
-        fetchNotifications()
+        lifecycleScope.launch {
+            fetchNotifications()
+        }
 
         val BackButton = view.findViewById<ImageView>(R.id.imageView5)
-        BackButton.setOnClickListener{
+        BackButton.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
     }
 
-    private fun fetchNotifications() {
-        lifecycleScope.launch{
-            progressBar.visibility = View.VISIBLE
-            val studentID = MyApplication.prefs.getSchoolNumber("schoolNumber","")
-            val response = withContext(Dispatchers.IO) {retrofitAPI.getFunsysNotiAll(studentID).execute()}
-            if (response.isSuccessful) {
-                val notifications = response.body()
-                notifications?.let { adapter.setItems(it)}
+    private suspend fun fetchNotifications() {
+        progressBar.visibility = View.VISIBLE
+        val studentID = MyApplication.prefs.getSchoolNumber("schoolNumber", "")
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val response = retrofitAPI.getFunsysNotiAll(studentID)
+                if (response.isSuccessful) {
+                    val notifications = response.body()
+                    withContext(Dispatchers.Main) {
+                        notifications?.let { adapter.setItems(it) }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("FunsysFragment", "fetchNotifications: ${e.message}", e)
+            } finally {
+                withContext(Dispatchers.Main) {
+                    progressBar.visibility = View.GONE
+                }
             }
-            progressBar.visibility = View.GONE // 데이터 로딩이 끝나면 ProgressBar를 사라지게 함
         }
     }
 

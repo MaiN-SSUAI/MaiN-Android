@@ -17,12 +17,12 @@ class Funsys_WebView : AppCompatActivity() {
 
         val url = intent.getStringExtra("url")
 
-        if(url!=null) {
+        if (url != null) {
             webView.loadUrl(url)
         }
 
         val BackButton = findViewById<ImageView>(R.id.imageView8)
-        BackButton.setOnClickListener{
+        BackButton.setOnClickListener {
             finish()
         }
     }
